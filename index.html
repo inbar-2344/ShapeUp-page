@@ -1,0 +1,3256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShapeUP: Scalable Image-Conditioned 3D Editing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #FDFBF7;
+            --color-bg-alt: #F5F1EA;
+            --color-text: #1A1A1A;
+            --color-text-muted: #5C5C5C;
+            --color-accent: #2563EB;
+            --color-accent-light: #DBEAFE;
+            --color-border: #E5E1D8;
+            --font-serif: 'Instrument Serif', Georgia, serif;
+            --font-sans: 'DM Sans', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            font-size: 19px;
+            overflow-x: clip;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.25rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(253, 251, 247, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--color-text);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-text);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 3rem 4rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1320px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        .hero-authors {
+            font-size: 1.1rem;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .hero-venue {
+            font-size: 1rem;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            letter-spacing: 0.08em;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        .hero-affiliations {
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--color-text);
+            color: var(--color-bg);
+        }
+
+        .btn-primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-bg-alt);
+            border-color: var(--color-text-muted);
+        }
+
+        .hero-image-container {
+            width: 100%;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0.75rem;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.8s;
+            border: 1px solid var(--color-border);
+        }
+
+        .hero-image-container img {
+            width: 100%;
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Tighten spacing between same-background sections */
+        #multistep,
+        #method,
+        #bibtex {
+            padding-top: 2rem;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-family: var(--font-serif);
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+            color: var(--color-text-muted);
+        }
+
+        /* Abstract Section */
+        #abstract {
+            background: var(--color-bg-alt);
+            max-width: none;
+        }
+
+        .abstract-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .abstract-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--color-text-muted);
+            text-align: justify;
+        }
+
+        .abstract-text strong {
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        /* Method Section */
+        .method-visual {
+            max-width: 80%;
+            margin: 0 auto 2rem;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            background: white;
+            padding: 1.5rem;
+        }
+
+        .method-visual img {
+            width: 100%;
+            display: block;
+        }
+
+        .method-caption {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .method-caption strong {
+            color: var(--color-text);
+        }
+
+        /* Qualitative Comparison Grid */
+        .comp-grid-wrapper {
+            border: 1px solid var(--color-border);
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            overflow: hidden;
+        }
+
+        .comp-header-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            background: var(--color-border);
+            gap: 1px;
+            border: 1px solid var(--color-border);
+            border-bottom: none;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            overflow: hidden;
+        }
+
+        .comp-header-row.is-fixed {
+            position: fixed;
+            z-index: 20;
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+            border-top: none;
+        }
+
+        .comp-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            background: var(--color-border);
+            gap: 1px;
+        }
+
+        .comp-grid-header {
+            display: contents;
+        }
+
+        .comp-col-header {
+            background: var(--color-bg-alt);
+            padding: 0.6rem 0.5rem;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+        }
+
+        .comp-col-header.ours {
+            color: var(--color-accent);
+            background: var(--color-accent-light);
+        }
+
+        .comp-cell {
+            background: white;
+            padding: 0.4rem;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .comp-cell:hover {
+            background: #f8f7f4;
+        }
+
+        .comp-cell.highlight {
+            background: #f0f5ff;
+        }
+
+        .comp-cell.highlight:hover {
+            background: #e6eeff;
+        }
+
+        .comp-cell video,
+        .comp-cell img {
+            width: 100%;
+            display: block;
+            border-radius: 4px;
+        }
+
+        /* Lightbox */
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            display: flex;
+            pointer-events: none;
+            transition: background 0.35s ease, backdrop-filter 0.35s ease;
+        }
+
+        .lightbox-overlay.active {
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(10px);
+            pointer-events: all;
+        }
+
+        .lightbox-content {
+            background: rgb(27, 27, 27);
+            border-radius: 20px;
+            padding: 1.5rem 1.5rem 1.25rem;
+            width: 100%;
+            max-width: 95vw;
+            max-height: 92vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.92) translateY(16px);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+        }
+
+        .lightbox-overlay.active .lightbox-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            z-index: 1;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .lightbox-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+        }
+
+        .lightbox-label {
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.45);
+            padding-bottom: 0.5rem;
+        }
+
+        .lightbox-label.ours {
+            color: #93c5fd;
+        }
+
+        .lightbox-cell {
+            overflow: hidden;
+            border-radius: 8px;
+            background: rgb(27, 27, 27);
+        }
+
+        .lightbox-cell video,
+        .lightbox-cell img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Scrubber */
+        .lightbox-scrubber {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .lightbox-scrubber-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lightbox-scrubber input[type=range] {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.15);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .lightbox-scrubber input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 0 4px rgba(0,0,0,0.4);
+        }
+
+        .lightbox-scrubber-time {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            white-space: nowrap;
+        }
+
+        .lightbox-play-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .lightbox-play-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        /* Click-to-expand hint on the "Ours" cell */
+        .comp-cell.highlight::before {
+            content: '↗ Click to expand';
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            background: rgba(59, 130, 246, 0.9);
+            color: white;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+            pointer-events: none;
+            z-index: 15;
+            opacity: 0;
+            white-space: nowrap;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .comp-cell.highlight.row-hovered::before {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Row hover highlight — use ::after so it renders above video content */
+        .comp-cell.row-hovered::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            box-shadow: inset 0 2px 0 var(--color-accent), inset 0 -2px 0 var(--color-accent);
+            z-index: 10;
+        }
+        .comp-cell.row-hover-first::after {
+            box-shadow: inset 0 2px 0 var(--color-accent), inset 0 -2px 0 var(--color-accent), inset 2px 0 0 var(--color-accent);
+        }
+        .comp-cell.row-hover-last::after {
+            box-shadow: inset 0 2px 0 var(--color-accent), inset 0 -2px 0 var(--color-accent), inset -2px 0 0 var(--color-accent);
+        }
+
+        /* BibTeX */
+        .bibtex-container {
+            background: var(--color-text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .bibtex-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bibtex-header span {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .copy-btn {
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .bibtex-code {
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-text);
+        }
+
+        /* Experimental Results Section */
+        #experiments {
+            background: var(--color-text);
+            color: var(--color-bg);
+            max-width: none;
+        }
+
+        #experiments .section-label {
+            color: var(--color-accent-light);
+        }
+
+        #experiments .section-title {
+            color: var(--color-bg);
+        }
+
+        .results-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .results-table {
+            margin-top: 3rem;
+            overflow-x: auto;
+            margin-bottom: 4rem;
+        }
+
+        .table-caption {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0 auto 1rem auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .table-caption strong {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        table.data-table thead {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        table.data-table th {
+            text-align: center;
+            padding: 0.8rem 1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        table.data-table th:first-child {
+            text-align: left;
+        }
+
+        table.data-table td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        table.data-table td:first-child {
+            text-align: left;
+        }
+
+        table.data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .model-name {
+            font-weight: 500;
+        }
+
+        .model-name.ours {
+            color: #4ade80;
+        }
+
+        .best {
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        .second-best {
+            text-decoration: underline;
+            text-decoration-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .col-group-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding-bottom: 0.25rem;
+        }
+
+        /* User study bar chart */
+        .user-study-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .user-study-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-study-card h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .bar-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            width: 80px;
+            flex-shrink: 0;
+            font-family: var(--font-mono);
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.25);
+            transition: width 0.8s ease;
+        }
+
+        .bar-fill.ours {
+            background: #4ade80;
+        }
+
+        .bar-value {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-mono);
+            width: 42px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .bar-value.ours {
+            color: #4ade80;
+            font-weight: 700;
+        }
+
+        /* Ablation section */
+        .ablation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .ablation-example {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+
+        .ablation-example-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 2px;
+            background: var(--color-border);
+        }
+
+        .ablation-example-header > div {
+            background: white;
+            padding: 0.4rem;
+            text-align: center;
+        }
+
+        .ablation-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--color-text-muted);
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        .ablation-label.ours {
+            color: var(--color-accent);
+        }
+
+        .ablation-img {
+            width: 100%;
+            display: block;
+            border-radius: 4px;
+        }
+
+        /* Qualitative Results Gallery */
+        .results-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-info {
+            padding: 1.25rem;
+        }
+
+        .result-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-accent);
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        /* =====================
+           Results Showcase Carousel
+           ===================== */
+        .showcase-carousel {
+            position: relative;
+        }
+
+        .showcase-carousel-track .showcase-page {
+            display: none;
+        }
+
+        .showcase-carousel-track .showcase-page.active {
+            display: block;
+        }
+
+        .showcase-page-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        /* =====================
+           Multi-Step Editing
+           ===================== */
+        .multistep-carousel {
+            position: relative;
+        }
+
+        .multistep-carousel-track {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .multistep-carousel-track .multistep-chain {
+            display: none;
+        }
+
+        .multistep-carousel-track .multistep-chain.active {
+            display: block;
+        }
+
+        .multistep-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(calc(-50% - 1rem));
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            border: 1px solid var(--color-border);
+            background: white;
+            color: var(--color-text);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .multistep-nav:hover {
+            background: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+        }
+
+        .multistep-nav:disabled {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .multistep-nav-prev {
+            left: -1.25rem;
+        }
+
+        .multistep-nav-next {
+            right: -1.25rem;
+        }
+
+        .multistep-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .multistep-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .multistep-dot.active {
+            background: var(--color-accent);
+            transform: scale(1.25);
+        }
+
+        .multistep-dot:hover {
+            background: var(--color-accent);
+        }
+
+        .multistep-chain {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--color-border);
+            padding: 1.5rem;
+            overflow-x: auto;
+            transition: box-shadow 0.3s ease, border-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .multistep-chain:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.07);
+            border-color: var(--color-accent);
+        }
+
+        .multistep-chain-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .multistep-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .multistep-step video {
+            width: 150%;
+            margin: -12% -25%;
+            display: block;
+        }
+
+        .multistep-step img {
+            width: 100%;
+            display: block;
+        }
+
+        .multistep-step-video-wrap,
+        .multistep-step-img-wrap {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .multistep-step-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            text-align: center;
+        }
+
+        .multistep-step-label.step-result {
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .result-pair {
+            display: flex;
+            flex-direction: row;
+            gap: 0.75rem;
+            flex: 2;
+            min-width: 0;
+        }
+
+        .result-pair-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.35rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .result-pair-item .multistep-step-video-wrap {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .result-pair-item video {
+            width: 150%;
+            margin: -12% -25%;
+            display: block;
+        }
+
+        .result-pair-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .result-pair-label.textured {
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .result-pair-label.untextured {
+            color: #7C3AED;
+            font-weight: 600;
+        }
+
+        .multistep-arrow {
+            color: var(--color-accent);
+            font-size: 1.2rem;
+            padding: 0 0.6rem;
+            flex-shrink: 0;
+            align-self: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .hero {
+                padding: 6rem 1.5rem 3rem;
+            }
+
+            .hero-image-container {
+                padding: 0.5rem;
+                border-radius: 10px;
+            }
+
+            .ablation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .showcase-page-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .multistep-step {
+                min-width: 120px;
+            }
+
+            .hero-actions {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="#" class="nav-logo">ShapeUP</a>
+        <ul class="nav-links">
+            <li><a href="#abstract">Abstract</a></li>
+            <li><a href="#showcase">Gallery</a></li>
+            <li><a href="#method">Method</a></li>
+            <li><a href="#experiments">Evaluation</a></li>
+            <li><a href="#bibtex">BibTeX</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>ShapeUP: Scalable Image-Conditioned 3D Editing</h1>
+
+            <div class="hero-venue">CONDITIONALLY ACCEPTED TO SIGGRAPH 2026</div>
+
+            <div class="hero-authors">
+                Inbar Gat<sup>1,2</sup>, Dana Cohen Bar<sup>2</sup>, Guy Levy<sup>2</sup>,
+                Elad Richardson<sup>3</sup>, Daniel Cohen-Or<sup>2</sup>
+            </div>
+
+            <div class="hero-affiliations">
+                <sup>1</sup>Aigency.ai &nbsp;&nbsp; <sup>2</sup>Tel Aviv University &nbsp;&nbsp; <sup>3</sup>Runway
+            </div>
+
+            <div class="hero-actions">
+                <a href="https://arxiv.org/pdf/2602.05676" target="_blank" class="btn btn-primary">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    Paper
+                </a>
+                <a href="https://arxiv.org/abs/2602.05676" target="_blank" class="btn btn-primary">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2"></path>
+                    </svg>
+                    arXiv
+                </a>
+                <a href="https://github.com/inbar-2344/ShapeUp" target="_blank" class="btn btn-primary">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                    </svg>
+                    Code
+                </a>
+                <a href="#" class="btn btn-primary">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7zm4 3h8m-8 4h5"></path>
+                    </svg>
+                    Dataset
+                </a>
+            </div>
+
+            <div class="hero-image-container">
+                <img src="asset/teaser.png" alt="ShapeUP teaser figure">
+            </div>
+        </div>
+    </header>
+
+    <section id="abstract">
+        <div class="abstract-content">
+            <div class="section-header">
+                <span class="section-label">Abstract</span>
+                <h2 class="section-title">Overview</h2>
+            </div>
+            <p class="abstract-text">
+                Recent advancements in 3D foundation models have enabled the generation of high-fidelity assets,
+                yet precise 3D manipulation remains a significant challenge. Existing 3D editing frameworks often face a
+                difficult trade-off between visual controllability, geometric consistency, and scalability.
+                Specifically, optimization-based methods are prohibitively slow, multi-view 2D propagation techniques
+                suffer from visual drift, and training-free latent manipulation methods are inherently bound by frozen
+                priors and cannot directly benefit from scaling.
+                <br><br>
+                In this work, we present <strong>ShapeUP</strong>, a scalable, image-conditioned 3D editing framework
+                that formulates editing as a supervised latent-to-latent translation within a native 3D representation.
+                This formulation allows ShapeUP to build on a pretrained 3D foundation model, leveraging its strong
+                generative prior while adapting it to editing through supervised training.
+                <br><br>
+                In practice, ShapeUP is trained on triplets consisting of a source 3D shape, an edited 2D image, and
+                the corresponding edited 3D shape, and learns a direct mapping using a <strong>3D Diffusion
+                Transformer (DiT)</strong>. This image-as-prompt approach enables fine-grained visual control over both
+                local and global edits and achieves implicit, mask-free localization, while maintaining strict structural
+                consistency with the original asset.
+            </p>
+        </div>
+    </section>
+
+    <section id="showcase">
+        <div class="section-header">
+            <span class="section-label">Gallery</span>
+            <h2 class="section-title">Our Results</h2>
+        </div>
+
+        <p style="text-align:center; color: var(--color-text-muted); margin-bottom: 2.5rem; font-size: 1.05rem; max-width: 680px; margin-left: auto; margin-right: auto;">
+            ShapeUP results across a range of geometry and texture edits. Click any example to expand.
+        </p>
+
+        <div class="showcase-carousel">
+            <button class="multistep-nav multistep-nav-prev" id="sc-prev" aria-label="Previous">‹</button>
+            <button class="multistep-nav multistep-nav-next" id="sc-next" aria-label="Next">›</button>
+
+            <div class="showcase-carousel-track">
+
+                <!-- Page 1 -->
+                <div class="showcase-page active">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/batman_0008.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/batman_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/batman_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/batman_0011.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/batman_0011_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/batman_0011_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/batman_0016.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/batman_0016_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/batman_0016_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/camera_0000.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/camera_0000_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/camera_0000_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 2 -->
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/camera_0007.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/camera_0007_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/camera_0007_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/camera_0012.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/camera_0012_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/camera_0012_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/camera_0029.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/camera_0029_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/camera_0029_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/dannys_cat_0014.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_00014_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_00014_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 3 -->
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/dannys_cat_0019.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_00019_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_00019_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/dannys_cat_0010.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_0010_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_0010_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/dannys_cat_0015.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_0015_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_0015_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/deer_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/deer_0023.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/deer_0023_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/deer_0023_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 4 -->
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/german_shep_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/german_shep_0000.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/german_shep_0000_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/german_shep_0000_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/german_shep_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/german_shep_0006.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/german_shep_0006_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/german_shep_0006_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/grogu_0008.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/grogu_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/grogu_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/grogu_0011.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/grogu_0011_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/grogu_0011_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 5 -->
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/grogu_0025.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/grogu_0025_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/grogu_0025_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/helmet_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/helmet_0007.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/helmet_0007_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/helmet_0007_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/helmet_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/helmet_0024.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/helmet_0024_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/helmet_0024_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/hovercraft_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/hovercraft_0017.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/hovercraft_0017_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/hovercraft_0017_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 6 -->
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/man_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/man_0012.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/man_0012_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/man_0012_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/mythical_fox_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/mythical_fox_0006.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/mythical_fox_0006_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/mythical_fox_0006_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/orange_man_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/orange_man_0008.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/orange_man_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/orange_man_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/r2d2_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/r2d2_0011.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/r2d2_0011_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/r2d2_0011_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 7 -->
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/r2d2_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/r2d2_0022.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/r2d2_0022_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/r2d2_0022_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/red_dragon_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/red_dragon_0012.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/red_dragon_0012_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/red_dragon_0012_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/red_dragon_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/red_dragon_0022.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/red_dragon_0022_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/red_dragon_0022_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/robot_0011.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0011_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/robot_0011_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 8 -->
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/robot_0013.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0013_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/robot_0013_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/robot_0018.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0018_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/robot_0018_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/robot_0025.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0025_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/robot_0025_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/stormtrooper_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/stormtrooper_0016.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/stormtrooper_0000_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/stormtrooper_0000_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 9 -->
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/stormtrooper_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/stormtrooper_0009.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/stormtrooper_0009_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/stormtrooper_0009_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/stormtrooper_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/stormtrooper_0013.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/stormtrooper_0013_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/stormtrooper_0013_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/superman_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/superman_0021.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/superman_0021_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/superman_0021_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/terrier_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/terrier_0008.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/terrier_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/terrier_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 10 -->
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/terrier_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/terrier_0009.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/terrier_0009_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/terrier_0009_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/terrier_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/terrier_0016.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/terrier_0016_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/terrier_0016_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/fox_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/fox_0024.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/fox_0024_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/fox_0024_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/fox_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/fox_0012.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/fox_0012_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/fox_0012_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/cake_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/cake_0006.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/cake_0006_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/cake_0006_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/cake_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/cake_0008.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/cake_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/cake_0008_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/cake_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/cake_0019.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/cake_0019_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/cake_0019_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/dannys_cat_0020.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_0020_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_0020_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="showcase-page">
+                    <div class="showcase-page-grid">
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/mech_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/mech_0018.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/mech_0018_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/mech_0018_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/mech_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/mech_0022.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/mech_0022_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/mech_0022_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multistep-chain">
+                            <div class="multistep-chain-inner">
+                                <div class="multistep-step">
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/fox_source.mp4" type="video/mp4"></video></div>
+                                    <span class="multistep-step-label">Source</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="multistep-step">
+                                    <img src="asset/videos/condition/fox_0019.png" alt="Edit condition">
+                                    <span class="multistep-step-label">Edit Cond.</span>
+                                </div>
+                                <span class="multistep-arrow">→</span>
+                                <div class="result-pair">
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/fox_0019_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label textured">Textured</span>
+                                    </div>
+                                    <div class="result-pair-item">
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/fox_0019_360.mp4" type="video/mp4"></video></div>
+                                        <span class="result-pair-label untextured">Untextured</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="multistep-dots" id="sc-dots"></div>
+        </div>
+    </section>
+
+    <section id="method">
+        <div class="section-header">
+            <span class="section-label">Method</span>
+            <h2 class="section-title">How It Works</h2>
+        </div>
+
+        <div class="method-visual" style="max-width: 92%;">
+            <img src="asset/overview.jpg" alt="ShapeUP Method Overview">
+        </div>
+        <p class="method-caption">
+            <strong>Method Overview.</strong> ShapeUP formulates image-guided 3D editing as a supervised
+            latent-to-latent translation within a pretrained 3D Diffusion Transformer. Given a source shape
+            and an edit-conditioning image, ShapeUP produces an edited 3D asset with faithful geometry and
+            appearance while preserving unedited regions.
+        </p>
+
+        <div class="section-header" style="margin-top: 4rem;">
+            <h3 class="section-subtitle">Geometry Editing</h3>
+        </div>
+
+        <div class="method-visual" style="max-width: 68%;">
+            <img src="asset/geometry_pipeline.jpg" alt="ShapeUP Geometry Editing Pipeline">
+        </div>
+        <p class="method-caption">
+            <strong>Geometry Editing Pipeline.</strong> ShapeUP encodes the source 3D shape into the latent space of a
+            pretrained Step1X-3D DiT, then conditions diffusion on both the subsampled shape latents and the image
+            prompt via LoRA adapters trained on the MMDiT backbone. The model learns to translate the source
+            shape into the edited target geometry while preserving structural identity.
+        </p>
+
+        <div class="section-header" style="margin-top: 4rem;">
+            <h3 class="section-subtitle">Texture Editing</h3>
+        </div>
+
+        <div class="method-visual" style="max-width: 68%;">
+            <img src="asset/texture_pipeline.jpg" alt="ShapeUP Texture Editing Pipeline">
+        </div>
+        <p class="method-caption">
+            <strong>Texture Editing Pipeline.</strong> Multi-view renders of the source shape are injected through the
+            model's cross-attention layers alongside the edit conditioning image. View-axis positional encodings
+            distinguish source-texture tokens from edit tokens, enabling the model to synthesize consistent
+            appearance that respects both the edit and the original fine-grained texture details.
+        </p>
+    </section>
+
+    <section id="experiments">
+        <div class="results-inner">
+            <div class="section-header">
+                <span class="section-label">Evaluation</span>
+                <h2 class="section-title">Quantitative Results</h2>
+            </div>
+
+            <div class="results-table">
+                <p class="table-caption">
+                    <strong>Quantitative comparison on BenchUp.</strong> We evaluate image-guided 3D shape editing
+                    by measuring <em>Condition Alignment</em> and <em>Occluded Region Fidelity</em>. ShapeUP
+                    outperforms all baselines across every metric, demonstrating superior edit fidelity without
+                    sacrificing preservation of unedited regions.
+                </p>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Method</th>
+                            <th colspan="5" class="col-group-label">Condition Alignment</th>
+                            <th colspan="2" class="col-group-label">Occluded Region Fidelity</th>
+                        </tr>
+                        <tr>
+                            <th>SSIM &uarr;</th>
+                            <th>LPIPS &darr;</th>
+                            <th>CLIP-I &uarr;</th>
+                            <th>DINO-I &uarr;</th>
+                            <th>C-Dir &uarr;</th>
+                            <th>CLIP-I &uarr;</th>
+                            <th>DINO-I &uarr;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="model-name">3DEditFormer</td>
+                            <td>0.733</td>
+                            <td>0.270</td>
+                            <td>0.908</td>
+                            <td>0.849</td>
+                            <td>0.441</td>
+                            <td>0.877</td>
+                            <td>0.736</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">EditP23</td>
+                            <td>0.759</td>
+                            <td>0.254</td>
+                            <td>0.917</td>
+                            <td>0.851</td>
+                            <td>0.455</td>
+                            <td>0.880</td>
+                            <td>0.748</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name ours">ShapeUP (Ours)</td>
+                            <td class="best">0.763</td>
+                            <td class="best">0.198</td>
+                            <td class="best">0.943</td>
+                            <td class="best">0.915</td>
+                            <td class="best">0.520</td>
+                            <td class="best">0.928</td>
+                            <td class="best">0.878</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="results-table">
+                <p class="table-caption">
+                    <strong>Ablation study.</strong> We evaluate the impact of the number of latent vectors and DFM
+                    training data on geometry editing, and compare texture conditioning strategies. Using 1024 latents
+                    with DFM data achieves the best overall balance of condition alignment and occluded region
+                    preservation.
+                </p>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Variant</th>
+                            <th colspan="5" class="col-group-label">Condition Alignment</th>
+                            <th colspan="2" class="col-group-label">Occluded Region Fidelity</th>
+                        </tr>
+                        <tr>
+                            <th>SSIM &uarr;</th>
+                            <th>LPIPS &darr;</th>
+                            <th>CLIP-I &uarr;</th>
+                            <th>DINO-I &uarr;</th>
+                            <th>C-Dir &uarr;</th>
+                            <th>CLIP-I &uarr;</th>
+                            <th>DINO-I &uarr;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="model-name">w/o DFM data</td>
+                            <td class="second-best">0.769</td>
+                            <td class="second-best">0.196</td>
+                            <td class="best">0.943</td>
+                            <td>0.909</td>
+                            <td>0.505</td>
+                            <td class="best">0.932</td>
+                            <td class="best">0.884</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">256 latents</td>
+                            <td>0.766</td>
+                            <td>0.206</td>
+                            <td class="second-best">0.941</td>
+                            <td>0.909</td>
+                            <td class="second-best">0.525</td>
+                            <td>0.917</td>
+                            <td>0.869</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">512 latents</td>
+                            <td>0.768</td>
+                            <td>0.220</td>
+                            <td>0.918</td>
+                            <td>0.868</td>
+                            <td>0.506</td>
+                            <td>0.905</td>
+                            <td>0.837</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">Concat MV (texture)</td>
+                            <td class="best">0.779</td>
+                            <td class="best">0.187</td>
+                            <td class="best">0.943</td>
+                            <td class="second-best">0.912</td>
+                            <td class="best">0.555</td>
+                            <td>0.897</td>
+                            <td>0.832</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name ours">ShapeUP (Ours)</td>
+                            <td>0.763</td>
+                            <td>0.198</td>
+                            <td class="best">0.943</td>
+                            <td class="best">0.915</td>
+                            <td>0.520</td>
+                            <td class="second-best">0.928</td>
+                            <td class="second-best">0.878</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-header" style="margin-top: 5rem;">
+                <h2 class="section-title">User Study</h2>
+            </div>
+            <p class="table-caption" style="margin-bottom: 2rem;">
+                <strong>Human preference study.</strong> Participants viewed the source object, target edit, and two
+                results (ours vs. one baseline) in a two-alternative forced-choice setup, selecting the result that
+                better achieves the edit while preserving the original. ShapeUP was strongly preferred across all
+                criteria. Results from 664 comparisons by 34 participants.
+            </p>
+
+            <div class="user-study-grid">
+                <div class="user-study-card">
+                    <h4>vs. 3DEditFormer</h4>
+                    <div class="bar-row">
+                        <span class="bar-label">ShapeUP</span>
+                        <div class="bar-track"><div class="bar-fill ours" style="width:83%"></div></div>
+                        <span class="bar-value ours">~83%</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Baseline</span>
+                        <div class="bar-track"><div class="bar-fill" style="width:17%"></div></div>
+                        <span class="bar-value">~17%</span>
+                    </div>
+                </div>
+                <div class="user-study-card">
+                    <h4>vs. EditP23</h4>
+                    <div class="bar-row">
+                        <span class="bar-label">ShapeUP</span>
+                        <div class="bar-track"><div class="bar-fill ours" style="width:77%"></div></div>
+                        <span class="bar-value ours">~77%</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Baseline</span>
+                        <div class="bar-track"><div class="bar-fill" style="width:23%"></div></div>
+                        <span class="bar-value">~23%</span>
+                    </div>
+                </div>
+                <div class="user-study-card">
+                    <h4>Overall Preference</h4>
+                    <div class="bar-row">
+                        <span class="bar-label">ShapeUP</span>
+                        <div class="bar-track"><div class="bar-fill ours" style="width:80%"></div></div>
+                        <span class="bar-value ours">~80%</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Baselines</span>
+                        <div class="bar-track"><div class="bar-fill" style="width:20%"></div></div>
+                        <span class="bar-value">~20%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="qualitative">
+        <div class="section-header">
+            <h2 class="section-title">Qualitative Comparison</h2>
+        </div>
+
+        <p style="text-align:center; color: var(--color-text-muted); margin-bottom: 2.5rem; font-size: 1.05rem; max-width: 680px; margin-left: auto; margin-right: auto;">
+            Each row shows the rotating source mesh, edit condition image, and results from all three methods. Videos play automatically as you scroll.
+        </p>
+
+        <div class="comp-header-row">
+            <div class="comp-col-header">Source</div>
+            <div class="comp-col-header">Edit Condition</div>
+            <div class="comp-col-header ours">ShapeUP (Ours)</div>
+            <div class="comp-col-header">3DEditFormer</div>
+            <div class="comp-col-header">EditP23</div>
+        </div>
+        <div id="comp-header-spacer" style="display:none;"></div>
+        <div class="comp-grid-wrapper">
+        <div class="comp-grid">
+
+<!-- dannys_cat_0014 -->
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><img src="asset/videos/condition/dannys_cat_0014.png" alt="Edit condition"></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_00014_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/dannys_cat_render_0014.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/dannys_cat_render_0014.mp4" type="video/mp4"></video></div>
+            <!-- mythical_fox_0006 -->
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/mythical_fox_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><img src="asset/videos/condition/mythical_fox_0006.png" alt="Edit condition"></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/mythical_fox_0006_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/mythical_fox_render_0006.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/mythical_fox_render_0006.mp4" type="video/mp4"></video></div>
+            <!-- man_0012 -->
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/man_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><img src="asset/videos/condition/man_0012.png" alt="Edit condition"></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/man_0012_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/man_render_0012.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/man_render_0012.mp4" type="video/mp4"></video></div>
+            <!-- grogu_0008 -->
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><img src="asset/videos/condition/grogu_0008.png" alt="Edit condition"></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/grogu_0008_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/grogu_render_0008.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/grogu_render_0008.mp4" type="video/mp4"></video></div>
+            <!-- batman_0011 -->
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><img src="asset/videos/condition/batman_0011.png" alt="Edit condition"></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/batman_0011_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/batman_render_0011.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/batman_render_0011.mp4" type="video/mp4"></video></div>
+            <!-- robot_0025 -->
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><img src="asset/videos/condition/robot_0025.png" alt="Edit condition"></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0025_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/robot_0025_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/robot_0025_360.mp4" type="video/mp4"></video></div>
+        </div>
+        </div>
+
+    </section>
+
+    <section id="bibtex">
+        <div class="section-header">
+            <span class="section-label">Citation</span>
+            <h2 class="section-title">BibTeX</h2>
+        </div>
+        <div class="bibtex-container">
+            <div class="bibtex-header">
+                <span>BibTeX</span>
+                <button class="copy-btn" onclick="copyBibtex()">Copy</button>
+            </div>
+            <pre class="bibtex-code">@article{gat2026shapeup,
+  title={ShapeUP: Scalable Image-Conditioned 3D Editing},
+  author={Gat, Inbar and Cohen Bar, Dana and Levy, Guy and Richardson, Elad and Cohen-Or, Daniel},
+  journal={Preprint},
+  year={2026}
+}</pre>
+        </div>
+    </section>
+
+    <footer>
+        <p>Copyright &copy; 2026 ShapeUP Authors. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--color-text-muted);">We gratefully acknowledge <a href="https://johnson111788.github.io/open-safari/" target="_blank" style="color: var(--color-text-muted); text-decoration: underline;">Captain Safari</a> for the website template.</p>
+    </footer>
+
+    <div class="lightbox-overlay" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightbox-close">✕</button>
+            <div class="lightbox-grid" id="lightbox-grid"></div>
+            <div class="lightbox-scrubber">
+                <div class="lightbox-scrubber-row">
+                    <button class="lightbox-play-btn" id="lightbox-play">⏸</button>
+                    <input type="range" id="lightbox-scrubber" min="0" max="1000" value="0" step="1">
+                    <span class="lightbox-scrubber-time" id="lightbox-time">0.0s / 5.0s</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fixed per-row scale (zoom in, clips at cell boundary)
+        const scaleByRow = {};
+        const defaultScale = 1.4;
+
+        const gridCells = Array.from(document.querySelectorAll('.comp-grid .comp-cell'));
+        const rowCount = gridCells.length / 5;
+        for (let r = 0; r < rowCount; r++) {
+            const rowCells = gridCells.slice(r * 5, r * 5 + 5);
+            // Identify row by the ours video src
+            const oursVid = rowCells[2].querySelector('video source');
+            const name = oursVid ? oursVid.src.split('/').pop().replace('.mp4','') : '';
+            const scale = scaleByRow[name] ?? defaultScale;
+            rowCells.forEach((cell, i) => {
+                if (i === 1) return; // skip condition
+                const media = cell.querySelector('video, img');
+                if (media) {
+                    media.style.transform = `scale(${scale})`;
+                    media.style.transformOrigin = 'center center';
+                }
+            });
+        }
+
+        // Sticky column header
+        const compHeader = document.querySelector('.comp-header-row');
+        const compWrapper = document.querySelector('.comp-grid-wrapper');
+        if (compHeader && compWrapper) {
+            const navHeight = document.querySelector('nav').offsetHeight;
+
+            function updateStickyHeader() {
+                const headerH = compHeader.offsetHeight;
+                // Natural top of header = top of wrapper minus header height (works even when header is fixed)
+                const wrapperRect = compWrapper.getBoundingClientRect();
+                const naturalHeaderTop = wrapperRect.top - headerH;
+                const wrapperBottom = wrapperRect.bottom;
+                const shouldStick = naturalHeaderTop <= navHeight
+                                 && wrapperBottom > navHeight + headerH;
+
+                const spacer = document.getElementById('comp-header-spacer');
+                if (shouldStick) {
+                    compHeader.classList.add('is-fixed');
+                    compHeader.style.top = navHeight + 'px';
+                    compHeader.style.width = compWrapper.offsetWidth + 'px';
+                    compHeader.style.left = compWrapper.getBoundingClientRect().left + 'px';
+                    spacer.style.display = 'block';
+                    spacer.style.height = compHeader.offsetHeight + 'px';
+                } else {
+                    compHeader.classList.remove('is-fixed');
+                    compHeader.style.top = '';
+                    compHeader.style.width = '';
+                    compHeader.style.left = '';
+                    spacer.style.display = 'none';
+                }
+            }
+
+            window.addEventListener('scroll', updateStickyHeader);
+            window.addEventListener('resize', updateStickyHeader);
+        }
+
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxGrid = document.getElementById('lightbox-grid');
+        const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxScrubber = document.getElementById('lightbox-scrubber');
+        const lightboxTime = document.getElementById('lightbox-time');
+        const lightboxPlayBtn = document.getElementById('lightbox-play');
+        const colLabels = ['Source', 'Edit Condition', 'ShapeUP (Ours)', '3DEditFormer', 'EditP23'];
+        let lightboxVideos = [];
+        let scrubberRaf = null;
+        let isPlaying = true;
+
+        function updateScrubberUI() {
+            const vid = lightboxVideos.find(v => v.duration);
+            if (!vid) return;
+            const dur = vid.duration;
+            const t = vid.currentTime;
+            lightboxScrubber.value = (t / dur) * 1000;
+            lightboxTime.textContent = `${t.toFixed(1)}s / ${dur.toFixed(1)}s`;
+            if (isPlaying) scrubberRaf = requestAnimationFrame(updateScrubberUI);
+        }
+
+        function openLightbox(rowCells) {
+            lightboxGrid.innerHTML = '';
+            lightboxVideos = [];
+            // Determine row scale (same logic as the main grid)
+            const oursSource = rowCells[2] && rowCells[2].querySelector('video source');
+            const rowName = oursSource ? (oursSource.dataset.src || oursSource.src).split('/').pop().replace('.mp4','') : '';
+            const rowScale = scaleByRow[rowName] ?? defaultScale;
+            colLabels.forEach((label, i) => {
+                const lbl = document.createElement('div');
+                lbl.className = 'lightbox-label' + (i === 2 ? ' ours' : '');
+                lbl.textContent = label;
+                lightboxGrid.appendChild(lbl);
+            });
+            rowCells.forEach((cell, i) => {
+                const div = document.createElement('div');
+                div.className = 'lightbox-cell';
+                const srcVid = cell.querySelector('video');
+                const srcImg = cell.querySelector('img');
+                if (srcVid) {
+                    const vid = document.createElement('video');
+                    vid.muted = true; vid.loop = true; vid.playsInline = true;
+                    const src = srcVid.querySelector('source');
+                    const originalSrc = src ? (src.dataset.src || src.src) : '';
+                    const showcaseSrc = originalSrc.replace('asset/videos/', 'asset/videos_showcase_dark/');
+                    vid.src = showcaseSrc;
+                    vid.dataset.fallbackSrc = originalSrc;
+                    vid.addEventListener('error', function onError() {
+                        if (vid.src.endsWith(vid.dataset.fallbackSrc)) return;
+                        vid.src = vid.dataset.fallbackSrc;
+                        vid.load();
+                        vid.removeEventListener('error', onError);
+                    }, { once: true });
+                    if (i !== 1) { vid.style.transform = `scale(${rowScale})`; vid.style.transformOrigin = 'center center'; }
+                    div.appendChild(vid);
+                    lightboxVideos.push(vid);
+                } else if (srcImg) {
+                    const img = document.createElement('img');
+                    img.src = srcImg.src; img.alt = srcImg.alt;
+                    div.appendChild(img);
+                }
+                lightboxGrid.appendChild(div);
+            });
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            isPlaying = true;
+            lightboxPlayBtn.textContent = '⏸';
+            lightboxVideos.forEach(v => v.play().catch(() => {}));
+            setTimeout(() => {
+                lightboxVideos.forEach(v => v.currentTime = 0);
+                scrubberRaf = requestAnimationFrame(updateScrubberUI);
+            }, 50);
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            cancelAnimationFrame(scrubberRaf);
+            lightboxVideos.forEach(v => { v.pause(); v.src = ''; });
+            lightboxVideos = [];
+            lightboxGrid.style.gridTemplateColumns = '';
+        }
+
+        lightboxScrubber.addEventListener('mousedown', () => {
+            isPlaying = false;
+            cancelAnimationFrame(scrubberRaf);
+            lightboxVideos.forEach(v => v.pause());
+            lightboxPlayBtn.textContent = '▶';
+        });
+        lightboxScrubber.addEventListener('input', () => {
+            const dur = lightboxVideos.find(v => v.duration)?.duration;
+            if (!dur) return;
+            const t = (lightboxScrubber.value / 1000) * dur;
+            lightboxVideos.forEach(v => v.currentTime = t);
+            lightboxTime.textContent = `${t.toFixed(1)}s / ${dur.toFixed(1)}s`;
+        });
+        lightboxPlayBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                isPlaying = false; cancelAnimationFrame(scrubberRaf);
+                lightboxVideos.forEach(v => v.pause());
+                lightboxPlayBtn.textContent = '▶';
+            } else {
+                isPlaying = true;
+                lightboxVideos.forEach(v => v.play().catch(() => {}));
+                lightboxPlayBtn.textContent = '⏸';
+                scrubberRaf = requestAnimationFrame(updateScrubberUI);
+            }
+        });
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+        // Row hover: blue border highlight + click to open lightbox
+        const allCells = Array.from(document.querySelectorAll('.comp-grid .comp-cell'));
+        const totalRows = allCells.length / 5;
+        for (let r = 0; r < totalRows; r++) {
+            const rowCells = allCells.slice(r * 5, r * 5 + 5);
+            rowCells.forEach((cell, i) => {
+                cell.addEventListener('mouseenter', () => {
+                    rowCells.forEach((c, j) => {
+                        c.classList.add('row-hovered');
+                        if (j === 0) c.classList.add('row-hover-first');
+                        if (j === 4) c.classList.add('row-hover-last');
+                    });
+                });
+                cell.addEventListener('mouseleave', () => {
+                    rowCells.forEach(c => c.classList.remove('row-hovered', 'row-hover-first', 'row-hover-last'));
+                });
+                cell.addEventListener('click', () => openLightbox(rowCells));
+            });
+        }
+
+        // Showcase carousel with browser-clock sync
+        (function() {
+            const pages = Array.from(document.querySelectorAll('.showcase-carousel-track .showcase-page'));
+            const dotsContainer = document.getElementById('sc-dots');
+            const prevBtn = document.getElementById('sc-prev');
+            const nextBtn = document.getElementById('sc-next');
+            let current = 0;
+            let syncRAF = null;
+
+            pages.forEach((_, i) => {
+                const dot = document.createElement('span');
+                dot.className = 'multistep-dot' + (i === 0 ? ' active' : '');
+                dot.addEventListener('click', () => goTo(i));
+                dotsContainer.appendChild(dot);
+            });
+
+            function syncPageVideos() {
+                const videos = pages[current].querySelectorAll('video');
+                const now = performance.now() / 1000;
+                videos.forEach(v => {
+                    if (v.readyState < 2 || v.paused) return;
+                    const dur = v.duration;
+                    if (!dur || dur === Infinity) return;
+                    const target = now % dur;
+                    if (Math.abs(v.currentTime - target) > 0.15) {
+                        v.currentTime = target;
+                    }
+                });
+                syncRAF = requestAnimationFrame(syncPageVideos);
+            }
+
+            function goTo(idx) {
+                if (syncRAF) { cancelAnimationFrame(syncRAF); syncRAF = null; }
+                pages[current].classList.remove('active');
+                dotsContainer.children[current].classList.remove('active');
+                current = idx;
+                pages[current].classList.add('active');
+                dotsContainer.children[current].classList.add('active');
+                prevBtn.disabled = current === 0;
+                nextBtn.disabled = current === pages.length - 1;
+                pages[current].querySelectorAll('video').forEach(v => {
+                    if (v.readyState < 2) v.load();
+                    v.play().catch(() => {});
+                });
+                syncRAF = requestAnimationFrame(syncPageVideos);
+            }
+
+            prevBtn.addEventListener('click', (e) => { e.stopPropagation(); if (current > 0) goTo(current - 1); });
+            nextBtn.addEventListener('click', (e) => { e.stopPropagation(); if (current < pages.length - 1) goTo(current + 1); });
+            goTo(0);
+
+            // Retry first page playback after videos have had time to load
+            function retryFirstPage() {
+                if (current !== 0) return;
+                pages[0].querySelectorAll('video').forEach(v => {
+                    if (v.paused) {
+                        if (v.readyState < 2) v.load();
+                        v.play().catch(() => {});
+                    }
+                });
+            }
+            setTimeout(retryFirstPage, 500);
+            setTimeout(retryFirstPage, 1500);
+            setTimeout(retryFirstPage, 3000);
+        })();
+
+
+        // Multi-step chain click-to-lightbox
+        document.querySelectorAll('.multistep-chain').forEach(chain => {
+            chain.addEventListener('click', () => {
+                const items = [];
+                const inner = chain.querySelector('.multistep-chain-inner');
+                if (!inner) return;
+                inner.childNodes.forEach(node => {
+                    if (node.nodeType !== 1) return;
+                    if (node.classList.contains('multistep-step')) {
+                        const lbl = node.querySelector('.multistep-step-label');
+                        const isResult = lbl && lbl.classList.contains('step-result');
+                        items.push({ el: node, label: lbl ? lbl.textContent : '', isResult });
+                    } else if (node.classList.contains('result-pair')) {
+                        node.querySelectorAll('.result-pair-item').forEach(rpItem => {
+                            const lbl = rpItem.querySelector('.result-pair-label');
+                            items.push({ el: rpItem, label: lbl ? lbl.textContent : '', isResult: true });
+                        });
+                    }
+                });
+
+                const numCols = items.length;
+                lightboxGrid.innerHTML = '';
+                lightboxGrid.style.gridTemplateColumns = `repeat(${numCols}, 1fr)`;
+                lightboxVideos = [];
+
+                items.forEach(item => {
+                    const lbl = document.createElement('div');
+                    lbl.className = 'lightbox-label' + (item.isResult ? ' ours' : '');
+                    lbl.textContent = item.label;
+                    lightboxGrid.appendChild(lbl);
+                });
+
+                items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'lightbox-cell';
+                    const srcVid = item.el.querySelector('video');
+                    const srcImg = item.el.querySelector('img');
+                    if (srcVid) {
+                        const vid = document.createElement('video');
+                        vid.muted = true; vid.loop = true; vid.playsInline = true;
+                        const src = srcVid.querySelector('source');
+                        const originalSrc = src ? (src.dataset.src || src.src) : '';
+                        const showcaseSrc = originalSrc.replace('asset/videos/', 'asset/videos_showcase_dark/');
+                        vid.dataset.fallbackSrc = originalSrc;
+                        vid.addEventListener('error', function onError() {
+                            const fallback = vid.dataset.fallbackSrc;
+                            if (!fallback || vid.src.endsWith(fallback)) return;
+                            vid.src = fallback;
+                            vid.load();
+                            vid.play().catch(() => {});
+                        }, { once: true });
+                        vid.src = showcaseSrc;
+                        vid.style.transform = `scale(${defaultScale})`;
+                        vid.style.transformOrigin = 'center center';
+                        div.appendChild(vid);
+                        lightboxVideos.push(vid);
+                    } else if (srcImg) {
+                        const img = document.createElement('img');
+                        img.src = srcImg.src; img.alt = srcImg.alt;
+                        div.appendChild(img);
+                    }
+                    lightboxGrid.appendChild(div);
+                });
+
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                isPlaying = true;
+                lightboxPlayBtn.textContent = '⏸';
+                lightboxVideos.forEach(v => v.play().catch(() => {}));
+                setTimeout(() => {
+                    lightboxVideos.forEach(v => v.currentTime = 0);
+                    scrubberRaf = requestAnimationFrame(updateScrubberUI);
+                }, 50);
+            });
+        });
+
+        function copyBibtex() {
+            const bibtex = document.querySelector('.bibtex-code').textContent;
+            navigator.clipboard.writeText(bibtex).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+
+
+        // Lazy-load videos: only start loading when near the viewport
+        // Skip showcase gallery videos — they are managed by the carousel's goTo()
+        document.querySelectorAll('video').forEach(video => {
+            if (video.closest('.showcase-carousel-track')) return;
+            video.querySelectorAll('source').forEach(source => {
+                source.dataset.src = source.src;
+                source.removeAttribute('src');
+            });
+            video.load();
+        });
+
+        const rowObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const video = entry.target;
+                    video.querySelectorAll('source').forEach(source => {
+                        if (source.dataset.src && !source.src) {
+                            source.src = source.dataset.src;
+                        }
+                    });
+                    video.load();
+                    video.play().catch(() => {});
+                    rowObserver.unobserve(video);
+                }
+            });
+        }, { rootMargin: '200px' });
+
+        document.querySelectorAll('video').forEach(video => {
+            if (video.closest('.showcase-carousel-track')) return;
+            rowObserver.observe(video);
+        });
+
+
+    </script>
+
+</body>
+
+</html>
