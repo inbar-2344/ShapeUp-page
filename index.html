@@ -1173,43 +1173,363 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Responsive */
+        /* =====================
+           Hamburger menu button (hidden on desktop)
+           ===================== */
+        .nav-hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            z-index: 110;
+        }
+        .nav-overlay {
+            display: none;
+        }
+        .nav-hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--color-text);
+            margin: 5px 0;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .nav-hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .nav-hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav-hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* =====================
+           Responsive — Tablet
+           ===================== */
+        @media (max-width: 1024px) {
+            .method-visual {
+                max-width: 100% !important;
+            }
+        }
+
+        /* =====================
+           Responsive — Mobile
+           ===================== */
         @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            /* Navigation — hamburger */
             nav {
-                padding: 1rem 1.5rem;
+                padding: 0.85rem 1.25rem;
             }
-
+            .nav-hamburger {
+                display: block;
+            }
             .nav-links {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 70vw;
+                max-width: 280px;
+                height: 100dvh;
+                background: var(--color-bg);
+                flex-direction: column;
+                padding: 5rem 2rem 2rem;
                 gap: 1.5rem;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+                z-index: 105;
+            }
+            .nav-links.open {
+                transform: translateX(0);
+            }
+            .nav-links a {
+                font-size: 1rem;
+            }
+            .nav-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.3);
+                z-index: 104;
+            }
+            .nav-overlay.open {
+                display: block;
             }
 
-            section {
-                padding: 4rem 1.5rem;
-            }
-
+            /* Hero */
             .hero {
-                padding: 6rem 1.5rem 3rem;
+                min-height: auto;
+                padding: 5rem 1.25rem 2.5rem;
+            }
+            .hero h1 {
+                font-size: clamp(2rem, 8vw, 3rem);
+                margin-bottom: 1rem;
+            }
+            .hero-venue {
+                font-size: 0.8rem;
+                letter-spacing: 0.06em;
+            }
+            .hero-authors {
+                font-size: 0.95rem;
+            }
+            .hero-affiliations {
+                font-size: 0.82rem;
+                margin-bottom: 1.5rem;
+            }
+            .hero-actions {
+                flex-wrap: wrap;
+                gap: 0.6rem;
+                justify-content: center;
+                margin-bottom: 2rem;
+            }
+            .btn {
+                padding: 0.65rem 1rem;
+                font-size: 0.85rem;
+            }
+            .hero-image-container {
+                padding: 0.35rem;
+                border-radius: 8px;
             }
 
-            .hero-image-container {
-                padding: 0.5rem;
+            /* Sections */
+            section {
+                padding: 3rem 1.25rem;
+            }
+            #multistep, #method, #bibtex {
+                padding-top: 1.5rem;
+            }
+            .section-header {
+                margin-bottom: 2rem;
+            }
+            .section-label {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: clamp(2rem, 6vw, 3rem);
+            }
+            .section-subtitle {
+                font-size: clamp(1.1rem, 4vw, 1.5rem);
+            }
+
+            /* Abstract */
+            .abstract-text {
+                font-size: 1rem;
+                line-height: 1.7;
+                text-align: left;
+            }
+
+            /* Method */
+            .method-visual {
+                max-width: 100% !important;
+                padding: 0.75rem;
                 border-radius: 10px;
             }
+            .method-caption {
+                font-size: 0.95rem;
+                text-align: left;
+            }
 
+            /* Showcase gallery — single column */
+            .showcase-page-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .multistep-chain {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            .multistep-chain-inner {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .multistep-step {
+                min-width: 0;
+                flex: 1 1 60px;
+            }
+            .multistep-arrow {
+                font-size: 1rem;
+                padding: 0 0.3rem;
+                margin-bottom: 1rem;
+            }
+            .result-pair {
+                flex: 2 1 auto;
+                gap: 0.5rem;
+            }
+            .multistep-step-label,
+            .result-pair-label {
+                font-size: 0.55rem;
+            }
+            .multistep-nav {
+                width: 2rem;
+                height: 2rem;
+                font-size: 0.9rem;
+            }
+            .multistep-nav-prev {
+                left: -0.5rem;
+            }
+            .multistep-nav-next {
+                right: -0.5rem;
+            }
+
+            /* Comparison grid — horizontal scroll */
+            .comp-header-row {
+                grid-template-columns: repeat(5, minmax(120px, 1fr));
+                border-radius: 10px 10px 0 0;
+                min-width: 600px;
+            }
+            .comp-header-row.is-fixed {
+                position: static !important;
+                width: auto !important;
+                left: auto !important;
+            }
+            #qualitative {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .comp-grid {
+                grid-template-columns: repeat(5, minmax(120px, 1fr));
+                min-width: 600px;
+            }
+            .comp-grid-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 0 0 10px 10px;
+            }
+            .comp-col-header {
+                font-size: 0.55rem;
+                padding: 0.5rem 0.3rem;
+            }
+            .comp-cell.highlight::before {
+                font-size: 0.5rem;
+                padding: 3px 7px;
+            }
+
+            /* Lightbox — mobile */
+            .lightbox-overlay {
+                padding: 0.75rem;
+            }
+            .lightbox-content {
+                padding: 0.75rem 0.75rem 0.6rem;
+                border-radius: 14px;
+                max-width: 100vw;
+                max-height: 95dvh;
+            }
+            .lightbox-grid {
+                gap: 0.35rem;
+            }
+            .lightbox-label {
+                font-size: 0.45rem;
+                padding-bottom: 0.25rem;
+            }
+            .lightbox-close {
+                top: 0.5rem;
+                right: 0.5rem;
+                width: 1.75rem;
+                height: 1.75rem;
+                font-size: 0.85rem;
+            }
+            .lightbox-scrubber input[type=range] {
+                height: 6px;
+            }
+            .lightbox-scrubber input[type=range]::-webkit-slider-thumb {
+                width: 20px;
+                height: 20px;
+            }
+
+            /* Tables — horizontal scroll */
+            .results-table {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin-left: -1.25rem;
+                margin-right: -1.25rem;
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
+            table.data-table {
+                font-size: 0.78rem;
+                min-width: 600px;
+            }
+            table.data-table th,
+            table.data-table td {
+                padding: 0.6rem 0.5rem;
+            }
+            .table-caption {
+                font-size: 0.9rem;
+                text-align: left;
+            }
+
+            /* User study */
+            .user-study-grid {
+                grid-template-columns: 1fr;
+            }
+            .bar-label {
+                width: 65px;
+                font-size: 0.72rem;
+            }
+
+            /* Ablation */
             .ablation-grid {
                 grid-template-columns: 1fr;
             }
-
-            .showcase-page-grid {
-                grid-template-columns: 1fr;
+            .ablation-label {
+                font-size: 0.58rem;
             }
 
-            .multistep-step {
-                min-width: 120px;
+            /* BibTeX */
+            .bibtex-code {
+                font-size: 0.72rem;
+                padding: 1rem;
+            }
+            .bibtex-header {
+                padding: 0.75rem 1rem;
             }
 
-            .hero-actions {
+            /* Footer */
+            footer {
+                padding: 2rem 1.25rem;
+                font-size: 0.82rem;
+            }
+            .footer-links {
+                gap: 1.25rem;
                 flex-wrap: wrap;
+            }
+        }
+
+        /* =====================
+           Responsive — Small phones
+           ===================== */
+        @media (max-width: 420px) {
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn {
+                justify-content: center;
+            }
+            .multistep-chain-inner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .multistep-arrow {
+                transform: rotate(90deg);
+                align-self: center;
+                margin-bottom: 0;
+                padding: 0.2rem 0;
+            }
+            .result-pair {
+                flex-direction: row;
+                width: 100%;
             }
         }
     </style>
@@ -1219,7 +1539,11 @@
 
     <nav>
         <a href="#" class="nav-logo">ShapeUP</a>
-        <ul class="nav-links">
+        <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-overlay" id="nav-overlay"></div>
+        <ul class="nav-links" id="nav-links">
             <li><a href="#abstract">Abstract</a></li>
             <li><a href="#showcase">Gallery</a></li>
             <li><a href="#method">Method</a></li>
@@ -2872,6 +3196,28 @@
     </div>
 
     <script>
+        // Mobile hamburger menu
+        (function() {
+            const hamburger = document.getElementById('nav-hamburger');
+            const navLinks = document.getElementById('nav-links');
+            const overlay = document.getElementById('nav-overlay');
+            function toggleMenu() {
+                hamburger.classList.toggle('open');
+                navLinks.classList.toggle('open');
+                overlay.classList.toggle('open');
+            }
+            function closeMenu() {
+                hamburger.classList.remove('open');
+                navLinks.classList.remove('open');
+                overlay.classList.remove('open');
+            }
+            hamburger.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', closeMenu);
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+        })();
+
         // Fixed per-row scale (zoom in, clips at cell boundary)
         const scaleByRow = {};
         const defaultScale = 1.4;
