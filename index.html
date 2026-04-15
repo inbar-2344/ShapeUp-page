@@ -733,8 +733,11 @@
 
         .results-table {
             margin-top: 3rem;
-            overflow-x: auto;
             margin-bottom: 4rem;
+        }
+
+        .results-table-scroll {
+            overflow-x: auto;
         }
 
         .table-caption {
@@ -811,6 +814,10 @@
             text-transform: uppercase;
             letter-spacing: 0.08em;
             padding-bottom: 0.25rem;
+        }
+
+        .group-divider {
+            border-left: 1px solid rgba(255, 255, 255, 0.18);
         }
 
         /* User study bar chart */
@@ -1470,7 +1477,7 @@
             }
 
             /* Tables — horizontal scroll */
-            .results-table {
+            .results-table-scroll {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
                 margin-left: -1.25rem;
@@ -2936,6 +2943,7 @@
                     outperforms all baselines across every metric, demonstrating superior edit fidelity without
                     sacrificing preservation of unedited regions.
                 </p>
+                <div class="results-table-scroll">
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -2949,7 +2957,7 @@
                             <th>CLIP-I &uarr;</th>
                             <th>DINO-I &uarr;</th>
                             <th>C-Dir &uarr;</th>
-                            <th>CLIP-I &uarr;</th>
+                            <th class="group-divider">CLIP-I &uarr;</th>
                             <th>DINO-I &uarr;</th>
                         </tr>
                     </thead>
@@ -2961,7 +2969,7 @@
                             <td>0.908</td>
                             <td>0.849</td>
                             <td>0.441</td>
-                            <td>0.877</td>
+                            <td class="group-divider">0.877</td>
                             <td>0.736</td>
                         </tr>
                         <tr>
@@ -2971,7 +2979,7 @@
                             <td>0.917</td>
                             <td>0.851</td>
                             <td>0.455</td>
-                            <td>0.880</td>
+                            <td class="group-divider">0.880</td>
                             <td>0.748</td>
                         </tr>
                         <tr>
@@ -2981,11 +2989,12 @@
                             <td class="best">0.943</td>
                             <td class="best">0.915</td>
                             <td class="best">0.520</td>
-                            <td class="best">0.928</td>
+                            <td class="best group-divider">0.928</td>
                             <td class="best">0.878</td>
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
 
             <div class="results-table">
@@ -2995,6 +3004,7 @@
                     with DFM data achieves the best overall balance of condition alignment and occluded region
                     preservation.
                 </p>
+                <div class="results-table-scroll">
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -3008,7 +3018,7 @@
                             <th>CLIP-I &uarr;</th>
                             <th>DINO-I &uarr;</th>
                             <th>C-Dir &uarr;</th>
-                            <th>CLIP-I &uarr;</th>
+                            <th class="group-divider">CLIP-I &uarr;</th>
                             <th>DINO-I &uarr;</th>
                         </tr>
                     </thead>
@@ -3020,7 +3030,7 @@
                             <td class="best">0.943</td>
                             <td>0.909</td>
                             <td>0.505</td>
-                            <td class="best">0.932</td>
+                            <td class="best group-divider">0.932</td>
                             <td class="best">0.884</td>
                         </tr>
                         <tr>
@@ -3030,7 +3040,7 @@
                             <td class="second-best">0.941</td>
                             <td>0.909</td>
                             <td class="second-best">0.525</td>
-                            <td>0.917</td>
+                            <td class="group-divider">0.917</td>
                             <td>0.869</td>
                         </tr>
                         <tr>
@@ -3040,7 +3050,7 @@
                             <td>0.918</td>
                             <td>0.868</td>
                             <td>0.506</td>
-                            <td>0.905</td>
+                            <td class="group-divider">0.905</td>
                             <td>0.837</td>
                         </tr>
                         <tr>
@@ -3050,7 +3060,7 @@
                             <td class="best">0.943</td>
                             <td class="second-best">0.912</td>
                             <td class="best">0.555</td>
-                            <td>0.897</td>
+                            <td class="group-divider">0.897</td>
                             <td>0.832</td>
                         </tr>
                         <tr>
@@ -3060,11 +3070,12 @@
                             <td class="best">0.943</td>
                             <td class="best">0.915</td>
                             <td>0.520</td>
-                            <td class="second-best">0.928</td>
+                            <td class="second-best group-divider">0.928</td>
                             <td class="second-best">0.878</td>
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
 
             <div class="section-header" style="margin-top: 5rem;">
