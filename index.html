@@ -420,6 +420,22 @@
             border-radius: 4px;
         }
 
+        .comp-cell video,
+        .multistep-step video,
+        .result-pair-item video,
+        .lightbox-cell video {
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            background: #ece7de;
+        }
+
+        .comp-cell video.is-ready,
+        .multistep-step video.is-ready,
+        .result-pair-item video.is-ready,
+        .lightbox-cell video.is-ready {
+            opacity: 1;
+        }
+
         /* Lightbox */
         .lightbox-overlay {
             position: fixed;
@@ -1099,6 +1115,7 @@
             width: 100%;
             overflow: hidden;
             border-radius: 10px;
+            background: #ece7de;
         }
 
         .multistep-step-label {
@@ -1655,7 +1672,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1666,11 +1683,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/batman_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/batman_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/batman_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/batman_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1679,7 +1696,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1690,11 +1707,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/batman_0011_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/batman_0011_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/batman_0011_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/batman_0011_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1703,7 +1720,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1714,11 +1731,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/batman_0016_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/batman_0016_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/batman_0016_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/batman_0016_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1727,7 +1744,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1738,11 +1755,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/camera_0000_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/camera_0000_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/camera_0000_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/camera_0000_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1757,7 +1774,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1768,11 +1785,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/camera_0007_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/camera_0007_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/camera_0007_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/camera_0007_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1781,7 +1798,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1792,11 +1809,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/camera_0012_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/camera_0012_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/camera_0012_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/camera_0012_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1805,7 +1822,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/camera_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1816,11 +1833,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/camera_0029_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/camera_0029_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/camera_0029_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/camera_0029_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1829,7 +1846,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1840,11 +1857,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_00014_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/dannys_cat_00014_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_00014_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/dannys_cat_00014_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1859,7 +1876,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1870,11 +1887,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_00019_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/dannys_cat_00019_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_00019_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/dannys_cat_00019_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1883,7 +1900,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1894,11 +1911,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_0010_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/dannys_cat_0010_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_0010_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/dannys_cat_0010_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1907,7 +1924,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1918,11 +1935,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_0015_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/dannys_cat_0015_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_0015_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/dannys_cat_0015_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1931,7 +1948,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/deer_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/deer_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1942,11 +1959,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/deer_0023_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/deer_0023_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/deer_0023_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/deer_0023_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1961,7 +1978,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/german_shep_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/german_shep_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1972,11 +1989,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/german_shep_0000_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/german_shep_0000_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/german_shep_0000_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/german_shep_0000_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -1985,7 +2002,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/german_shep_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/german_shep_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -1996,11 +2013,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/german_shep_0006_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/german_shep_0006_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/german_shep_0006_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/german_shep_0006_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2009,7 +2026,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2020,11 +2037,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/grogu_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/grogu_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/grogu_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/grogu_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2033,7 +2050,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2044,11 +2061,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/grogu_0011_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/grogu_0011_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/grogu_0011_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/grogu_0011_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2063,7 +2080,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2074,11 +2091,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/grogu_0025_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/grogu_0025_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/grogu_0025_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/grogu_0025_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2087,7 +2104,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/helmet_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/helmet_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2098,11 +2115,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/helmet_0007_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/helmet_0007_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/helmet_0007_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/helmet_0007_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2111,7 +2128,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/helmet_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/helmet_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2122,11 +2139,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/helmet_0024_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/helmet_0024_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/helmet_0024_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/helmet_0024_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2135,7 +2152,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/hovercraft_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/hovercraft_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2146,11 +2163,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/hovercraft_0017_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/hovercraft_0017_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/hovercraft_0017_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/hovercraft_0017_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2165,7 +2182,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/man_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/man_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2176,11 +2193,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/man_0012_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/man_0012_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/man_0012_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/man_0012_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2189,7 +2206,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/mythical_fox_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/mythical_fox_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2200,11 +2217,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/mythical_fox_0006_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/mythical_fox_0006_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/mythical_fox_0006_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/mythical_fox_0006_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2213,7 +2230,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/orange_man_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/orange_man_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2224,11 +2241,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/orange_man_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/orange_man_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/orange_man_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/orange_man_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2237,7 +2254,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/r2d2_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/r2d2_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2248,11 +2265,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/r2d2_0011_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/r2d2_0011_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/r2d2_0011_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/r2d2_0011_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2267,7 +2284,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/r2d2_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/r2d2_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2278,11 +2295,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/r2d2_0022_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/r2d2_0022_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/r2d2_0022_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/r2d2_0022_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2291,7 +2308,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/red_dragon_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/red_dragon_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2302,11 +2319,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/red_dragon_0012_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/red_dragon_0012_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/red_dragon_0012_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/red_dragon_0012_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2315,7 +2332,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/red_dragon_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/red_dragon_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2326,11 +2343,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/red_dragon_0022_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/red_dragon_0022_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/red_dragon_0022_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/red_dragon_0022_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2339,7 +2356,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2350,11 +2367,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0011_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/robot_0011_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/robot_0011_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/robot_0011_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2369,7 +2386,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2380,11 +2397,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0013_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/robot_0013_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/robot_0013_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/robot_0013_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2393,7 +2410,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2404,11 +2421,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0018_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/robot_0018_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/robot_0018_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/robot_0018_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2417,7 +2434,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2428,11 +2445,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0025_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/robot_0025_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/robot_0025_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/robot_0025_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2441,7 +2458,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/stormtrooper_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/stormtrooper_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2452,11 +2469,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/stormtrooper_0000_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/stormtrooper_0000_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/stormtrooper_0000_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/stormtrooper_0000_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2471,7 +2488,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/stormtrooper_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/stormtrooper_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2482,11 +2499,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/stormtrooper_0009_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/stormtrooper_0009_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/stormtrooper_0009_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/stormtrooper_0009_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2495,7 +2512,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/stormtrooper_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/stormtrooper_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2506,11 +2523,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/stormtrooper_0013_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/stormtrooper_0013_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/stormtrooper_0013_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/stormtrooper_0013_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2519,7 +2536,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/superman_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/superman_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2530,11 +2547,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/superman_0021_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/superman_0021_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/superman_0021_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/superman_0021_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2543,7 +2560,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/terrier_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/terrier_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2554,11 +2571,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/terrier_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/terrier_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/terrier_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/terrier_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2573,7 +2590,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/terrier_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/terrier_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2584,11 +2601,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/terrier_0009_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/terrier_0009_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/terrier_0009_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/terrier_0009_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2597,7 +2614,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/terrier_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/terrier_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2608,11 +2625,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/terrier_0016_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/terrier_0016_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/terrier_0016_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/terrier_0016_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2621,7 +2638,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/fox_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/fox_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2632,11 +2649,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/fox_0024_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/fox_0024_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/fox_0024_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/fox_0024_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2645,7 +2662,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/fox_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/fox_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2656,11 +2673,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/fox_0012_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/fox_0012_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/fox_0012_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/fox_0012_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2673,7 +2690,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/cake_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/cake_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2684,11 +2701,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/cake_0006_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/cake_0006_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/cake_0006_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/cake_0006_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2697,7 +2714,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/cake_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/cake_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2708,11 +2725,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/cake_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/cake_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/cake_0008_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/cake_0008_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2721,7 +2738,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/cake_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/cake_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2732,11 +2749,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/cake_0019_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/cake_0019_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/cake_0019_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/cake_0019_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2745,7 +2762,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2756,11 +2773,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_0020_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/dannys_cat_0020_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/dannys_cat_0020_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/dannys_cat_0020_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2773,7 +2790,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/mech_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/mech_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2784,11 +2801,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/mech_0018_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/mech_0018_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/mech_0018_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/mech_0018_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2797,7 +2814,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/mech_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/mech_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2808,11 +2825,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/mech_0022_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/mech_0022_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/mech_0022_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/mech_0022_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -2821,7 +2838,7 @@
                         <div class="multistep-chain">
                             <div class="multistep-chain-inner">
                                 <div class="multistep-step">
-                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/source/fox_source.mp4" type="video/mp4"></video></div>
+                                    <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/source/fox_source.mp4" type="video/mp4"></video></div>
                                     <span class="multistep-step-label">Source</span>
                                 </div>
                                 <span class="multistep-arrow">→</span>
@@ -2832,11 +2849,11 @@
                                 <span class="multistep-arrow">→</span>
                                 <div class="result-pair">
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/fox_0019_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/fox_0019_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label textured">Textured</span>
                                     </div>
                                     <div class="result-pair-item">
-                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source src="asset/videos/ours/untextured/fox_0019_360.mp4" type="video/mp4"></video></div>
+                                        <div class="multistep-step-video-wrap"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/untextured/fox_0019_360.mp4" type="video/mp4"></video></div>
                                         <span class="result-pair-label untextured">Untextured</span>
                                     </div>
                                 </div>
@@ -3117,41 +3134,41 @@
         <div class="comp-grid">
 
 <!-- dannys_cat_0014 -->
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/source/dannys_cat_source.mp4" type="video/mp4"></video></div>
             <div class="comp-cell"><img src="asset/videos/condition/dannys_cat_0014.png" alt="Edit condition"></div>
-            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/dannys_cat_00014_360.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/dannys_cat_render_0014.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/dannys_cat_render_0014.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/dannys_cat_00014_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/3deditformer/dannys_cat_render_0014.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/editp23/dannys_cat_render_0014.mp4" type="video/mp4"></video></div>
             <!-- mythical_fox_0006 -->
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/mythical_fox_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/source/mythical_fox_source.mp4" type="video/mp4"></video></div>
             <div class="comp-cell"><img src="asset/videos/condition/mythical_fox_0006.png" alt="Edit condition"></div>
-            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/mythical_fox_0006_360.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/mythical_fox_render_0006.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/mythical_fox_render_0006.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/mythical_fox_0006_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/3deditformer/mythical_fox_render_0006.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/editp23/mythical_fox_render_0006.mp4" type="video/mp4"></video></div>
             <!-- man_0012 -->
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/man_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/source/man_source.mp4" type="video/mp4"></video></div>
             <div class="comp-cell"><img src="asset/videos/condition/man_0012.png" alt="Edit condition"></div>
-            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/man_0012_360.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/man_render_0012.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/man_render_0012.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/man_0012_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/3deditformer/man_render_0012.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/editp23/man_render_0012.mp4" type="video/mp4"></video></div>
             <!-- grogu_0008 -->
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/source/grogu_source.mp4" type="video/mp4"></video></div>
             <div class="comp-cell"><img src="asset/videos/condition/grogu_0008.png" alt="Edit condition"></div>
-            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/grogu_0008_360.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/grogu_render_0008.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/grogu_render_0008.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/grogu_0008_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/3deditformer/grogu_render_0008.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/editp23/grogu_render_0008.mp4" type="video/mp4"></video></div>
             <!-- batman_0011 -->
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/source/batman_source.mp4" type="video/mp4"></video></div>
             <div class="comp-cell"><img src="asset/videos/condition/batman_0011.png" alt="Edit condition"></div>
-            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/batman_0011_360.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/batman_render_0011.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/batman_render_0011.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/batman_0011_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/3deditformer/batman_render_0011.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/editp23/batman_render_0011.mp4" type="video/mp4"></video></div>
             <!-- robot_0025 -->
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/source/robot_source.mp4" type="video/mp4"></video></div>
             <div class="comp-cell"><img src="asset/videos/condition/robot_0025.png" alt="Edit condition"></div>
-            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source src="asset/videos/ours/textured/robot_0025_360.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/3deditformer/robot_0025_360.mp4" type="video/mp4"></video></div>
-            <div class="comp-cell"><video autoplay muted loop playsinline><source src="asset/videos/editp23/robot_0025_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell highlight"><video autoplay muted loop playsinline><source data-src="asset/videos/ours/textured/robot_0025_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/3deditformer/robot_0025_360.mp4" type="video/mp4"></video></div>
+            <div class="comp-cell"><video autoplay muted loop playsinline><source data-src="asset/videos/editp23/robot_0025_360.mp4" type="video/mp4"></video></div>
         </div>
         </div>
 
@@ -3320,17 +3337,9 @@
                     const vid = document.createElement('video');
                     vid.muted = true; vid.loop = true; vid.playsInline = true;
                     const src = srcVid.querySelector('source');
-                    const originalSrc = src ? (src.dataset.src || src.src) : '';
-                    const showcaseSrc = originalSrc.replace('asset/videos/', 'asset/videos_showcase_dark/');
-                    vid.src = showcaseSrc;
-                    vid.dataset.fallbackSrc = originalSrc;
-                    vid.addEventListener('error', function onError() {
-                        if (vid.src.endsWith(vid.dataset.fallbackSrc)) return;
-                        vid.src = vid.dataset.fallbackSrc;
-                        vid.load();
-                        vid.removeEventListener('error', onError);
-                    }, { once: true });
+                    vid.src = src ? (src.dataset.src || src.src) : '';
                     if (i !== 1) { vid.style.transform = `scale(${rowScale})`; vid.style.transformOrigin = 'center center'; }
+                    whenVideoCanPaint(vid, markVideoReady);
                     div.appendChild(vid);
                     lightboxVideos.push(vid);
                 } else if (srcImg) {
@@ -3344,7 +3353,7 @@
             document.body.style.overflow = 'hidden';
             isPlaying = true;
             lightboxPlayBtn.textContent = '⏸';
-            lightboxVideos.forEach(v => v.play().catch(() => {}));
+            lightboxVideos.forEach((v, i) => requestVideoPlay(v, i * 100));
             setTimeout(() => {
                 lightboxVideos.forEach(v => v.currentTime = 0);
                 scrubberRaf = requestAnimationFrame(updateScrubberUI);
@@ -3409,14 +3418,104 @@
             });
         }
 
-        // Showcase carousel with browser-clock sync
+        function markVideoReady(video) {
+            if (!video) return;
+            video.classList.add('is-ready');
+        }
+
+        function whenVideoCanPaint(video, callback) {
+            if (!video) return;
+            if (video.readyState >= 2) {
+                callback(video);
+                return;
+            }
+            video.addEventListener('loadeddata', () => callback(video), { once: true });
+        }
+
+        function safeLoad(video) {
+            if (!video) return;
+            video.load();
+        }
+
+        function requestVideoPlay(video, delay = 0) {
+            if (!video) return;
+            window.setTimeout(() => {
+                const playPromise = video.play();
+                if (playPromise && typeof playPromise.catch === 'function') {
+                    playPromise.catch(() => {});
+                }
+            }, delay);
+        }
+
+        function stripVideoSources(video) {
+            if (!video) return;
+            video.querySelectorAll('source').forEach(src => {
+                if (src.src) {
+                    src.dataset.src = src.src;
+                    src.removeAttribute('src');
+                }
+            });
+            try { video.load(); } catch (e) {}
+        }
+
+        function restoreVideoSources(video) {
+            if (!video) return false;
+            let changed = false;
+            video.querySelectorAll('source').forEach(src => {
+                if (src.dataset.src && !src.src) {
+                    src.src = src.dataset.src;
+                    changed = true;
+                }
+            });
+            return changed;
+        }
+
+        // Sources are authored as data-src so Safari's HTML preload scanner
+        // can't eagerly fetch all 165 videos at parse time. Hydration happens
+        // in the showcase goTo() and the IntersectionObservers below.
+        document.querySelectorAll('video').forEach(video => {
+            video.preload = 'none';
+        });
+
+        function getPlayableDuration(video) {
+            const duration = video && video.duration;
+            return duration && duration !== Infinity && !isNaN(duration) ? duration : null;
+        }
+
+        function syncVideoGroup(videos, minDriftSeconds = 0.12, minDriftPhase = 0.04) {
+            const playableVideos = videos.filter(v => v.readyState >= 2 && !v.paused);
+            if (playableVideos.length < 2) return;
+
+            const leader = playableVideos.find(v => getPlayableDuration(v));
+            const leaderDuration = getPlayableDuration(leader);
+            if (!leader || !leaderDuration) return;
+
+            const leaderPhase = leader.currentTime / leaderDuration;
+            playableVideos.forEach(video => {
+                if (video === leader) return;
+                const duration = getPlayableDuration(video);
+                if (!duration) return;
+                const targetTime = leaderPhase * duration;
+                let drift = Math.abs(video.currentTime - targetTime);
+                drift = Math.min(drift, duration - drift);
+                const driftThreshold = Math.max(minDriftSeconds, duration * minDriftPhase);
+                if (drift > driftThreshold) {
+                    try { video.currentTime = targetTime; } catch (e) {}
+                }
+            });
+        }
+
+        // Showcase carousel: low-frequency normalized-phase sync.
         (function() {
             const pages = Array.from(document.querySelectorAll('.showcase-carousel-track .showcase-page'));
             const dotsContainer = document.getElementById('sc-dots');
             const prevBtn = document.getElementById('sc-prev');
             const nextBtn = document.getElementById('sc-next');
+            const syncIntervalMs = 750;
+            const minDriftSeconds = 0.12;
+            const minDriftPhase = 0.04;
             let current = 0;
-            let syncRAF = null;
+            let syncTimer = null;
 
             pages.forEach((_, i) => {
                 const dot = document.createElement('span');
@@ -3425,39 +3524,53 @@
                 dotsContainer.appendChild(dot);
             });
 
-            function syncPageVideos() {
-                const videos = pages[current].querySelectorAll('video');
-                const now = performance.now() / 1000;
-                videos.forEach(v => {
-                    if (v.readyState < 2 || v.paused) return;
-                    const dur = v.duration;
-                    if (!dur || dur === Infinity) return;
-                    const target = now % dur;
-                    if (Math.abs(v.currentTime - target) > 0.15) {
-                        v.currentTime = target;
-                    }
-                });
-                syncRAF = requestAnimationFrame(syncPageVideos);
+            function syncCurrentPage() {
+                syncVideoGroup(Array.from(pages[current].querySelectorAll('video')), minDriftSeconds, minDriftPhase);
+            }
+
+            function restartSyncTimer() {
+                if (syncTimer) {
+                    clearInterval(syncTimer);
+                }
+                syncTimer = window.setInterval(syncCurrentPage, syncIntervalMs);
             }
 
             function goTo(idx) {
-                if (syncRAF) { cancelAnimationFrame(syncRAF); syncRAF = null; }
-                pages[current].classList.remove('active');
-                dotsContainer.children[current].classList.remove('active');
-                current = idx;
-                pages[current].classList.add('active');
-                dotsContainer.children[current].classList.add('active');
+                if (syncTimer) {
+                    clearInterval(syncTimer);
+                    syncTimer = null;
+                }
+                if (current !== idx) {
+                    pages[current].querySelectorAll('video').forEach(v => {
+                        v.pause();
+                        stripVideoSources(v);
+                    });
+                    pages[current].classList.remove('active');
+                    dotsContainer.children[current].classList.remove('active');
+                    current = idx;
+                    pages[current].classList.add('active');
+                    dotsContainer.children[current].classList.add('active');
+                }
                 prevBtn.disabled = current === 0;
                 nextBtn.disabled = current === pages.length - 1;
-                pages[current].querySelectorAll('video').forEach(v => {
-                    if (v.readyState < 2) v.load();
-                    v.play().catch(() => {});
+                pages[current].querySelectorAll('video').forEach((v, i) => {
+                    const restored = restoreVideoSources(v);
+                    v.preload = 'auto';
+                    if (restored) safeLoad(v);
+                    whenVideoCanPaint(v, markVideoReady);
+                    try { v.currentTime = 0; } catch (e) {}
+                    requestVideoPlay(v, i * 80);
                 });
-                syncRAF = requestAnimationFrame(syncPageVideos);
+                window.setTimeout(syncCurrentPage, 200);
+                restartSyncTimer();
             }
 
             prevBtn.addEventListener('click', (e) => { e.stopPropagation(); if (current > 0) goTo(current - 1); });
             nextBtn.addEventListener('click', (e) => { e.stopPropagation(); if (current < pages.length - 1) goTo(current + 1); });
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) return;
+                window.setTimeout(syncCurrentPage, 100);
+            });
             goTo(0);
 
             // Retry first page playback after videos have had time to load
@@ -3465,14 +3578,32 @@
                 if (current !== 0) return;
                 pages[0].querySelectorAll('video').forEach(v => {
                     if (v.paused) {
-                        if (v.readyState < 2) v.load();
-                        v.play().catch(() => {});
+                        v.preload = 'auto';
+                        safeLoad(v);
+                        requestVideoPlay(v);
                     }
                 });
             }
             setTimeout(retryFirstPage, 500);
             setTimeout(retryFirstPage, 1500);
             setTimeout(retryFirstPage, 3000);
+        })();
+
+        // Qualitative comparison: sync all rows together.
+        (function() {
+            const comparisonVideos = Array.from(document.querySelectorAll('.comp-grid .comp-cell video'));
+            const syncIntervalMs = 750;
+
+            function syncComparisonGrid() {
+                syncVideoGroup(comparisonVideos);
+            }
+
+            window.setInterval(syncComparisonGrid, syncIntervalMs);
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) return;
+                window.setTimeout(syncComparisonGrid, 100);
+            });
+            window.setTimeout(syncComparisonGrid, 300);
         })();
 
 
@@ -3517,19 +3648,10 @@
                         const vid = document.createElement('video');
                         vid.muted = true; vid.loop = true; vid.playsInline = true;
                         const src = srcVid.querySelector('source');
-                        const originalSrc = src ? (src.dataset.src || src.src) : '';
-                        const showcaseSrc = originalSrc.replace('asset/videos/', 'asset/videos_showcase_dark/');
-                        vid.dataset.fallbackSrc = originalSrc;
-                        vid.addEventListener('error', function onError() {
-                            const fallback = vid.dataset.fallbackSrc;
-                            if (!fallback || vid.src.endsWith(fallback)) return;
-                            vid.src = fallback;
-                            vid.load();
-                            vid.play().catch(() => {});
-                        }, { once: true });
-                        vid.src = showcaseSrc;
+                        vid.src = src ? (src.dataset.src || src.src) : '';
                         vid.style.transform = `scale(${defaultScale})`;
                         vid.style.transformOrigin = 'center center';
+                        whenVideoCanPaint(vid, markVideoReady);
                         div.appendChild(vid);
                         lightboxVideos.push(vid);
                     } else if (srcImg) {
@@ -3544,7 +3666,7 @@
                 document.body.style.overflow = 'hidden';
                 isPlaying = true;
                 lightboxPlayBtn.textContent = '⏸';
-                lightboxVideos.forEach(v => v.play().catch(() => {}));
+                lightboxVideos.forEach((v, i) => requestVideoPlay(v, i * 100));
                 setTimeout(() => {
                     lightboxVideos.forEach(v => v.currentTime = 0);
                     scrubberRaf = requestAnimationFrame(updateScrubberUI);
@@ -3562,36 +3684,49 @@
         }
 
 
-        // Lazy-load videos: only start loading when near the viewport
-        // Skip showcase gallery videos — they are managed by the carousel's goTo()
-        document.querySelectorAll('video').forEach(video => {
-            if (video.closest('.showcase-carousel-track')) return;
-            video.querySelectorAll('source').forEach(source => {
-                source.dataset.src = source.src;
-                source.removeAttribute('src');
-            });
-            video.load();
-        });
-
-        const rowObserver = new IntersectionObserver((entries) => {
+        // Load earlier than playback so Safari has time to decode a first frame.
+        const preloadObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
+                const video = entry.target;
+                if (!entry.isIntersecting || video.closest('.showcase-carousel-track')) return;
+                if (video.dataset.preloaded === 'true') {
+                    preloadObserver.unobserve(video);
+                    return;
+                }
+                restoreVideoSources(video);
+                video.dataset.preloaded = 'true';
+                video.preload = 'auto';
+                safeLoad(video);
+                whenVideoCanPaint(video, markVideoReady);
+                preloadObserver.unobserve(video);
+            });
+        }, { rootMargin: '600px 0px' });
+
+        // Start and stop playback based on actual visibility to keep concurrent decodes down.
+        const playbackObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (video.closest('.showcase-carousel-track') || video.closest('.lightbox-grid')) return;
+                video.dataset.inView = entry.isIntersecting && entry.intersectionRatio >= 0.35 ? 'true' : 'false';
                 if (entry.isIntersecting) {
-                    const video = entry.target;
-                    video.querySelectorAll('source').forEach(source => {
-                        if (source.dataset.src && !source.src) {
-                            source.src = source.dataset.src;
-                        }
-                    });
-                    video.load();
-                    video.play().catch(() => {});
-                    rowObserver.unobserve(video);
+                    const restored = restoreVideoSources(video);
+                    video.preload = 'auto';
+                    if (restored || video.dataset.preloaded !== 'true') {
+                        video.dataset.preloaded = 'true';
+                        safeLoad(video);
+                    }
+                    requestVideoPlay(video, 80);
+                    whenVideoCanPaint(video, markVideoReady);
+                } else {
+                    video.pause();
                 }
             });
-        }, { rootMargin: '200px' });
+        }, { threshold: [0, 0.35, 0.6], rootMargin: '300px 0px' });
 
         document.querySelectorAll('video').forEach(video => {
             if (video.closest('.showcase-carousel-track')) return;
-            rowObserver.observe(video);
+            preloadObserver.observe(video);
+            playbackObserver.observe(video);
         });
 
 
