@@ -338,6 +338,10 @@
         }
 
         /* Qualitative Comparison Grid */
+        .comp-header-shell {
+            overflow: visible;
+        }
+
         .comp-grid-wrapper {
             border: 1px solid var(--color-border);
             border-bottom-left-radius: 16px;
@@ -1406,6 +1410,11 @@
                 position: static !important;
                 width: auto !important;
                 left: auto !important;
+            }
+            .comp-header-shell {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 10px 10px 0 0;
             }
             #qualitative {
                 overflow-x: auto;
@@ -3122,12 +3131,14 @@
             Each row shows the rotating source mesh, edit condition image, and results from all three methods. Videos play automatically as you scroll.
         </p>
 
-        <div class="comp-header-row">
-            <div class="comp-col-header">Source</div>
-            <div class="comp-col-header">Edit Condition</div>
-            <div class="comp-col-header ours">ShapeUP (Ours)</div>
-            <div class="comp-col-header">3DEditFormer</div>
-            <div class="comp-col-header">EditP23</div>
+        <div class="comp-header-shell">
+            <div class="comp-header-row">
+                <div class="comp-col-header">Source</div>
+                <div class="comp-col-header">Edit Condition</div>
+                <div class="comp-col-header ours">ShapeUP (Ours)</div>
+                <div class="comp-col-header">3DEditFormer</div>
+                <div class="comp-col-header">EditP23</div>
+            </div>
         </div>
         <div id="comp-header-spacer" style="display:none;"></div>
         <div class="comp-grid-wrapper">
@@ -3258,6 +3269,7 @@
         }
 
         // Sticky column header
+        const compHeaderShell = document.querySelector('.comp-header-shell');
         const compHeader = document.querySelector('.comp-header-row');
         const compWrapper = document.querySelector('.comp-grid-wrapper');
         if (compHeader && compWrapper) {
@@ -3291,6 +3303,30 @@
 
             window.addEventListener('scroll', updateStickyHeader);
             window.addEventListener('resize', updateStickyHeader);
+        }
+
+        if (compHeaderShell && compWrapper) {
+            let syncingHeaderScroll = false;
+            let syncingGridScroll = false;
+
+            function syncHeaderFromGrid() {
+                if (window.innerWidth > 768 || syncingGridScroll) return;
+                syncingHeaderScroll = true;
+                compHeaderShell.scrollLeft = compWrapper.scrollLeft;
+                syncingHeaderScroll = false;
+            }
+
+            function syncGridFromHeader() {
+                if (window.innerWidth > 768 || syncingHeaderScroll) return;
+                syncingGridScroll = true;
+                compWrapper.scrollLeft = compHeaderShell.scrollLeft;
+                syncingGridScroll = false;
+            }
+
+            compWrapper.addEventListener('scroll', syncHeaderFromGrid, { passive: true });
+            compHeaderShell.addEventListener('scroll', syncGridFromHeader, { passive: true });
+            window.addEventListener('resize', syncHeaderFromGrid);
+            syncHeaderFromGrid();
         }
 
         // Lightbox
